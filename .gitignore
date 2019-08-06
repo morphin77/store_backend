@@ -4,6 +4,12 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+# Gemfile.lock
+Gemfile.lock
+
+#some file
+backend.iml
+
 # Ignore idea config
 /.idea
 # Ignore bundler config.
