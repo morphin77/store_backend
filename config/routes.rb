@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   root to: 'api/v1/units_measure#index'
   namespace :api do
     namespace :v1 do
-      resources :users, param: :username
+      resources :users, param: :nickname
       resources :units_measure
       resources :categories
     end

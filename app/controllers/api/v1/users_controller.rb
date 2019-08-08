@@ -4,18 +4,17 @@ module Api
       before_action :authorize_request, except: :create
       before_action :find_user, except: %i[create index]
 
-      # GET /users
+      # GET /api/v1/users
       def index
-        @users = User.all
-        render json: @users, status: :ok
+        render json: User.all, status: :ok
       end
 
-      # GET /users/{username}
+      # GET /api/v1/users/{nickname}
       def show
         render json: @user, status: :ok
       end
 
-      # POST /users
+      # POST /api/v1/users
       def create
         @user = User.new(user_params)
         if @user.save
@@ -26,7 +25,7 @@ module Api
         end
       end
 
-      # PUT /users/{username}
+      # PUT /api/v1/users/{nickname}
       def update
         unless @user.update(user_params)
           render json: { errors: @user.errors.full_messages },
@@ -34,7 +33,7 @@ module Api
         end
       end
 
-      # DELETE /users/{username}
+      # DELETE /api/v1/users/{nickname}
       def destroy
         @user.destroy
       end
@@ -42,7 +41,7 @@ module Api
       private
 
       def find_user
-        @user = User.find_by_username!(params[:username])
+        @user = User.find_by_nickname!(params[:nickname])
       rescue ActiveRecord::RecordNotFound
         render json: { errors: 'User not found' }, status: :not_found
       end
