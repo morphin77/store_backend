@@ -9,7 +9,8 @@ Gemfile.lock
 
 #some file
 backend.iml
-
+# ignore coverage report
+coverage
 # Ignore idea config
 /.idea
 # Ignore bundler config.
