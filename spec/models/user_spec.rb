@@ -1,17 +1,26 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  before(:each) do
-    @user = User.new(
-        name: "Oleg",
-        username: "Kulakov",
-        email: "test@test.test",
-        password: "12345678",
-        password_confirmation: "12345678"
-    )
+
+  describe '#name' do
+    it { should validate_presence_of(:name) }
   end
 
-  it "should be valid" do
-    expect(@user).to be_valid
+  describe '#surname' do
+    it { should validate_presence_of(:surname) }
   end
+
+  describe '#nickname' do
+    it { should validate_presence_of(:nickname) }
+  end
+
+  describe '#email' do
+    it { should validate_presence_of(:email) }
+  end
+
+  describe '#email' do
+    it { should_not allow_value("blah").for(:email) }
+    it { should allow_value("a@b.com").for(:email) }
+  end
+
 end
