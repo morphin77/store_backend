@@ -9,4 +9,6 @@ class User < ApplicationRecord
   validates :password,
             length: { minimum: 8 },
             if: -> { new_record? || !password.nil? }
+
+  default_scope { select("id, name, surname, nickname, email") }
 end
