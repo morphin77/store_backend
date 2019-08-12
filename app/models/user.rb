@@ -11,6 +11,6 @@ class User < ApplicationRecord
             if: -> { new_record? || !password.nil? }
 
   default_scope {
-    select(:id, :name, :surname, :nickname, :email )
+    select(:name, :surname, :nickname, :email )
   }
 end

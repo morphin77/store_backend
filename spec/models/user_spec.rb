@@ -1,5 +1,5 @@
 require 'rails_helper'
-
+#ToDo: add test for default scope
 RSpec.describe User, type: :model do
 
   describe '#name persence' do
@@ -28,68 +28,111 @@ RSpec.describe User, type: :model do
     it { should allow_value("a@b.com").for(:email) }
   end
 
-  before('@check_email_unique') do
-    User.create(name: "test",
-                surname: "test",
-                nickname: "test",
-                email: "test@test.test",
-                password: "test_password",
-                password_confirmation: "test_password"
-    )
+
+  describe 'email unique' do
+    before('@check_email_unique') do
+      User.create(name: "test",
+                  surname: "test",
+                  nickname: "test",
+                  email: "test@test.test",
+                  password: "test_password",
+                  password_confirmation: "test_password"
+      )
+    end
+
+    after('@check_email_unique') do
+      User.delete_all
+    end
+
+    it 'email must be unique', :check_email_unique => true do
+      user = User.create(name: "test",
+                         surname: "test",
+                         nickname: "test1",
+                         email: "test@test.test",
+                         password: "test_password",
+                         password_confirmation: "test_password"
+      )
+
+      expect(user.errors.empty?).to be_falsey
+    end
   end
 
-  after('@check_email_unique') do
-    User.delete_all
+  describe 'nickname unique' do
+    before('@check_nickname_unique') do
+      User.create(name: "test",
+                  surname: "test",
+                  nickname: "test",
+                  email: "test@test.test",
+                  password: "test_password",
+                  password_confirmation: "test_password"
+      )
+    end
+
+    after('@check_nickname_unique') do
+      User.delete_all
+    end
+
+    it 'nickname must be unique', :check_nickname_unique => true do
+      user = User.create(name: "test",
+                         surname: "test",
+                         nickname: "test",
+                         email: "test2@test.test",
+                         password: "test_password",
+                         password_confirmation: "test_password"
+      )
+
+      expect(user.errors.empty?).to be_falsey
+    end
   end
 
-  it 'email must be unique', :check_email_unique => true do
-     user = User.create(name: "test",
-                surname: "test",
-                nickname: "test1",
-                email: "test@test.test",
-                password: "test_password",
-                password_confirmation: "test_password"
-     )
+  describe 'password length' do
+    it 'check password length' do
+      user = User.create(name: "test",
+                         surname: "test",
+                         nickname: "test",
+                         email: "test2@test.test",
+                         password: "test",
+                         password_confirmation: "test_password"
+      )
 
-     expect(user.errors.empty?).to be_falsey
+      expect(user.errors.empty?).to be_falsey
+    end
+
   end
 
-  before('@check_nickname_unique') do
-    User.create(name: "test",
-                surname: "test",
-                nickname: "test",
-                email: "test@test.test",
-                password: "test_password",
-                password_confirmation: "test_password"
-    )
-  end
+  describe 'user default scope' do
+    before('@check_user_default_scope') do
+      User.create(name: "test",
+                  surname: "test",
+                  nickname: "test",
+                  email: "test@test.test",
+                  password: "test_password",
+                  password_confirmation: "test_password"
+      )
+    end
 
-  after('@check_nickname_unique') do
-    User.delete_all
-  end
+    it 'user return parameters', :check_user_default_scope => true do
+      user = User.first
 
-  it 'nickname must be unique', :check_nickname_unique => true do
-    user = User.create(name: "test",
-                       surname: "test",
-                       nickname: "test",
-                       email: "test2@test.test",
-                       password: "test_password",
-                       password_confirmation: "test_password"
-    )
+      expect(user).to have_attributes(
+                          name: "test",
+                          surname: "test",
+                          nickname: "test",
+                          email: "test@test.test"
+                      )
+    end
 
-    expect(user.errors.empty?).to be_falsey
-  end
+    it 'user not return id', :check_user_default_scope => true do
+      user = User.first
 
-  it 'check password length' do
-    user = User.create(name: "test",
-                       surname: "test",
-                       nickname: "test",
-                       email: "test2@test.test",
-                       password: "test",
-                       password_confirmation: "test_password"
-    )
+      expect(user).not_to have_attribute(:id)
+    end
 
-    expect(user.errors.empty?).to be_falsey
+    it 'user not return password_digest', :check_user_default_scope => true do
+      user = User.first
+
+      expect(user).not_to have_attribute(:password_digest)
+    end
   end
 
 end
